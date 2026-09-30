@@ -2,7 +2,7 @@ import { parseArgs } from "node:util";
 import type { SearchInput } from "@repo/core";
 import { providers, customProviderId, isCredentialProvider } from "@repo/core/providers";
 import { CliError } from "./errors";
-import { DEFAULT_MAX_SOURCE_BYTES } from "./render";
+import { DEFAULT_MAX_OUTPUT_BYTES, DEFAULT_MAX_SOURCE_BYTES } from "./render";
 import type { AuthOptions } from "./auth";
 
 const credentialProviders = [...Object.keys(providers), customProviderId];
@@ -18,7 +18,9 @@ export type Command =
       root: string;
       noCache: boolean;
       concurrency?: number;
+      maxRequests: number;
       maxSourceBytes: number;
+      maxOutputBytes: number;
       policy: NonNullable<SearchInput["policy"]>;
     };
 
@@ -41,7 +43,9 @@ export function parseCommand(args: string[]): Command {
         yes: { type: "boolean" },
         "no-cache": { type: "boolean" },
         concurrency: { type: "string" },
+        "max-requests": { type: "string" },
         "max-source-bytes": { type: "string" },
+        "max-output-bytes": { type: "string" },
         hidden: { type: "boolean" },
         "no-ignore": { type: "boolean" },
         "include-dependencies": { type: "boolean" },
@@ -137,6 +141,22 @@ export function parseCommand(args: string[]): Command {
     (!/^\d+$/.test(rawBudget) || !Number.isSafeInteger(maxSourceBytes))
   )
     throw new CliError("--max-source-bytes must be a nonnegative integer (0 means unlimited).");
+  const rawRequests = values["max-requests"];
+  const maxRequests = rawRequests === undefined ? 1_000 : Number(rawRequests);
+  if (
+    !Number.isSafeInteger(maxRequests) ||
+    maxRequests < 1 ||
+    (rawRequests && !/^\d+$/.test(rawRequests))
+  )
+    throw new CliError("--max-requests must be a positive integer.");
+  const rawOutput = values["max-output-bytes"];
+  const maxOutputBytes = rawOutput === undefined ? DEFAULT_MAX_OUTPUT_BYTES : Number(rawOutput);
+  if (
+    !Number.isSafeInteger(maxOutputBytes) ||
+    (maxOutputBytes !== 0 && maxOutputBytes < 256) ||
+    (rawOutput !== undefined && !/^\d+$/.test(rawOutput))
+  )
+    throw new CliError("--max-output-bytes must be 0 (unlimited) or at least 256.");
   const policy = policyFrom(values);
   return {
     kind: "search",
@@ -144,7 +164,9 @@ export function parseCommand(args: string[]): Command {
     root: positionals[1] ?? process.cwd(),
     noCache: values["no-cache"] ?? false,
     ...(concurrency === undefined ? {} : { concurrency }),
+    maxRequests,
     maxSourceBytes,
+    maxOutputBytes,
     policy,
   };
 }
@@ -209,7 +231,9 @@ Skill installation requires npm/npx and network access. Without options,
 the skills installer prompts for agents and installation settings.
 
 Search options:
+  --max-requests N         Provider request ceiling (default: 1000)
   --max-source-bytes N     Source allocation; 0 means unlimited (default: ${DEFAULT_MAX_SOURCE_BYTES})
+  --max-output-bytes N     Total stdout cap; 0 means unlimited (default: ${DEFAULT_MAX_OUTPUT_BYTES})
   --hidden                Include hidden paths
   --no-ignore             Disable .gitignore/.ignore patterns
   --include-dependencies  Include dependency and build directories

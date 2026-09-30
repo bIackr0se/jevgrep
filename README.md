@@ -123,6 +123,9 @@ Combined Sol-plus-Jev cost was 2–3% higher, accepted as a small tradeoff for t
 release. These single-run observations do not establish statistical equivalence
 or a speed improvement.
 
+Current protocols and subsequent experiments are in the
+[evaluation records](evals/README.md).
+
 ## Source, credentials, and local state
 
 Searches send eligible source content to Jev through the provider selected during auth. Default

@@ -123,6 +123,7 @@ async function main() {
       const evaluator = createEvaluator({
         cache,
         concurrency: command.concurrency,
+        requestLimit: command.maxRequests,
         policyVersion: JSON.stringify(command.policy),
         ...credentials,
         signal: controller.signal,
@@ -138,7 +139,7 @@ async function main() {
         evaluator,
       );
       if (pipeClosed) return;
-      await write(renderResult(result, command.maxSourceBytes));
+      await write(renderResult(result, command.maxSourceBytes, command.maxOutputBytes));
       process.exitCode =
         result.status === "interrupted" ? 130 : result.status === "incomplete" ? 2 : 0;
     }
