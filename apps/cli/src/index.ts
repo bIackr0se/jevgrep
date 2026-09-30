@@ -103,6 +103,7 @@ async function main() {
       const { inventory } = await import("@repo/core");
       const result = await inventory({
         root: command.root,
+        includePaths: command.list,
         policy: command.policy,
         signal: controller.signal,
         protectedPaths: [configDirectory(), cacheDirectory()],
