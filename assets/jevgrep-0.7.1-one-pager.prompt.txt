@@ -42,3 +42,16 @@ impl Index {
 The ellipsis is illustrative omitted source, and braces must be balanced.
 
 No other changes. Return the full landscape slide, same aspect ratio and framing.
+
+
+Version announcement refinement prompt
+
+Edit this Jevgrep one-page slide into a clear VERSION ANNOUNCEMENT for release 0.7.1.
+
+Change the top header area only. The main headline must read exactly "jevgrep 0.7.1" and be the largest, most visually dominant text on the entire slide. Use the same elegant heavy serif style. Set "jevgrep" in near-black and "0.7.1" in vivid vermilion, with the version equally large as the product name. A viewer must immediately notice and remember 0.7.1. Keep this as one beautiful oversized headline.
+
+Immediately underneath, put the smaller but still prominent subtitle exactly "More languages. More control." Use approximately one-third the headline's size, so it supports the version announcement.
+
+Remove the old small top-left jevgrep wordmark, the old small top-right version pill, and the kicker "WHAT'S NEW SINCE 0.5". Instead include only a modest small uppercase kicker "NEW RELEASE" above the main headline. This is a 0.7.1 announcement, not a retrospective comparison.
+
+Preserve the warm ivory paper background, ink and vermilion palette, artwork, six feature blocks, file-tree diagram, Python and TS/JS checkmarks, correct Go/Rust illustrative excerpts, install command, readable typography, clean alignment and generous margins. Maintain the full 16:9 landscape slide and strong editorial design. Reflow the header gracefully so the subtitle is not crowded or overlapping the diagram; a small proportional adjustment to the illustration's vertical position is allowed to fit the new title hierarchy. Keep all existing feature text unchanged. Do not add other text or claims. No watermark.
